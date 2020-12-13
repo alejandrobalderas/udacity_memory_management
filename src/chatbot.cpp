@@ -90,6 +90,7 @@ ChatBot::ChatBot(ChatBot &&source){
     _currentNode = source._currentNode;
     _rootNode = source._rootNode;
     _chatLogic = source._chatLogic;
+    _chatLogic->SetChatbotHandle(this);
 
     _image = new wxBitmap();
     *_image = *source._image;
@@ -114,6 +115,7 @@ ChatBot & ChatBot::operator=(ChatBot &&source){
     _currentNode = source._currentNode;
     _rootNode = source._rootNode;
     _chatLogic = source._chatLogic;
+    _chatLogic->SetChatbotHandle(this);
 
     delete _image;
     _image = new wxBitmap();
