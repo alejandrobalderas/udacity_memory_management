@@ -8,6 +8,8 @@
 #include "graphedge.h"
 #include "chatbot.h"
 
+#include <iostream>
+
 // constructor WITHOUT memory allocation
 ChatBot::ChatBot()
 {
@@ -42,11 +44,92 @@ ChatBot::~ChatBot()
     }
 }
 
-//// STUDENT CODE
-////
+// TASK 2
+// Implementation of the rule of five
 
-////
-//// EOF STUDENT CODE
+// 2. Copy Constructor
+ChatBot::ChatBot(const ChatBot &source){
+
+    std::cout << "Copy constructor" << std::endl;
+    // Shallow copy
+    _currentNode = source._currentNode;
+    _rootNode = source._rootNode;
+    _chatLogic = source._chatLogic;
+    _chatLogic->SetChatbotHandle(this);
+
+    // Deep Copy
+    _image = new wxBitmap();
+    *_image = *source._image;
+}
+
+// 3. Copy assignment operator
+ChatBot & ChatBot::operator=(const ChatBot &source){
+    std::cout << "Copy assignment operator" << std::endl;
+    if (this == &source){
+        return *this;
+    }
+    // Shallow copy
+    _currentNode = source._currentNode;
+    _rootNode = source._rootNode;
+    _chatLogic = source._chatLogic;
+    _chatLogic->SetChatbotHandle(this);
+
+    // Deep Copy
+    delete _image;
+    _image = new wxBitmap();
+    *_image = *source._image;
+
+    return *this;
+}
+
+// 4. Move constructor
+ChatBot::ChatBot(ChatBot &&source){
+    std::cout << "Move Constructor" << std::endl;
+
+    // pass ownership
+    _currentNode = source._currentNode;
+    _rootNode = source._rootNode;
+    _chatLogic = source._chatLogic;
+
+    _image = new wxBitmap();
+    *_image = *source._image;
+
+    // Invalidate old object
+    source._currentNode = nullptr;
+    source._rootNode = nullptr;
+    source._chatLogic = nullptr;
+
+    delete source._image;
+    source._image = nullptr;
+
+}
+
+// 5. Move assignment operator
+ChatBot & ChatBot::operator=(ChatBot &&source){
+    std::cout << "Move assignment operator" << std::endl;
+    if (this == &source){
+        return *this;
+    }
+    // pass ownership
+    _currentNode = source._currentNode;
+    _rootNode = source._rootNode;
+    _chatLogic = source._chatLogic;
+
+    delete _image;
+    _image = new wxBitmap();
+    *_image = *source._image;
+
+    // Invalidate old object
+    source._currentNode = nullptr;
+    source._rootNode = nullptr;
+    source._chatLogic = nullptr;
+
+    delete source._image;
+    source._image = nullptr;
+
+    return *this;
+
+}
 
 void ChatBot::ReceiveMessageFromUser(std::string message)
 {
