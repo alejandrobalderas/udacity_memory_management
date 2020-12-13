@@ -29,23 +29,13 @@ ChatLogic::ChatLogic()
 
 ChatLogic::~ChatLogic()
 {
-    //// STUDENT CODE
-    ////
-
     // delete chatbot instance
     delete _chatBot;
 
     // Nodes are smart pointers and thus they will be deleted at the end of the scope of ChatLogic
     // Removed code to free node pointer
 
-    // delete all edges
-    for (auto it = std::begin(_edges); it != std::end(_edges); ++it)
-    {
-        delete *it;
-    }
-
-    ////
-    //// EOF STUDENT CODE
+    //TASK 4- Remove code to free edges
 }
 
 template <typename T>
@@ -152,7 +142,8 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
                             auto childNode = std::find_if(_nodes.begin(), _nodes.end(), [&childToken](const std::unique_ptr<GraphNode> & node) { return node->GetID() == std::stoi(childToken->second); });
 
                             // create new edge
-                            GraphEdge *edge = new GraphEdge(id);
+                            std::unique_ptr<GraphEdge> edge = std::make_unique<GraphEdge>(id);
+
                             edge->SetChildNode(childNode->get());
                             edge->SetParentNode(parentNode->get());
                             _edges.push_back(edge);
@@ -161,8 +152,8 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
                             AddAllTokensToElement("KEYWORD", tokens, *edge);
 
                             // store reference in child node and parent node
-                            (*childNode)->AddEdgeToParentNode(edge);
-                            (*parentNode)->AddEdgeToChildNode(edge);
+                            (*childNode)->AddEdgeToParentNode(edge.get());
+                            (*parentNode)->AddEdgeToChildNode(std::move(edge));
                         }
 
                     }
