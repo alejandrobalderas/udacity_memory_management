@@ -8,13 +8,8 @@ GraphNode::GraphNode(int id)
 
 GraphNode::~GraphNode()
 {
-    //// STUDENT CODE
-    ////
-
-    delete _chatBot; 
-
-    ////
-    //// EOF STUDENT CODE
+    // TASK 0
+    // Fix memory bug by removing the code that tries to free the chatbot memory.
 }
 
 void GraphNode::AddToken(std::string token)
