@@ -14,28 +14,12 @@
 
 ChatLogic::ChatLogic()
 {
-    //// STUDENT CODE
-    ////
-
-    // create instance of chatbot
-    _chatBot = new ChatBot("../images/chatbot.png");
-
-    // add pointer to chatlogic so that chatbot answers can be passed on to the GUI
-    _chatBot->SetChatLogicHandle(this);
-
-    ////
-    //// EOF STUDENT CODE
+    std::cout << "Chat Logic Constructor" << std::endl;
 }
 
 ChatLogic::~ChatLogic()
 {
-    // delete chatbot instance
-    delete _chatBot;
-
-    // Nodes are smart pointers and thus they will be deleted at the end of the scope of ChatLogic
-    // Removed code to free node pointer
-
-    //TASK 4- Remove code to free edges
+    std::cout << "Chat Logic Destructor" << std::endl;
 }
 
 template <typename T>
@@ -146,14 +130,13 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
 
                             edge->SetChildNode(childNode->get());
                             edge->SetParentNode(parentNode->get());
-                            _edges.push_back(edge);
 
                             // find all keywords for current node
                             AddAllTokensToElement("KEYWORD", tokens, *edge);
 
                             // store reference in child node and parent node
                             (*childNode)->AddEdgeToParentNode(edge.get());
-                            (*parentNode)->AddEdgeToChildNode(std::move(edge));
+                            (*parentNode)->AddEdgeToChildNode(std::move(edge)); // Transfer ownership
                         }
 
                     }
@@ -195,10 +178,12 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
             }
         }
     }
+    ChatBot chatbot("../images/chatbot.png");
+    chatbot.SetChatLogicHandle(this);
 
     // add chatbot to graph root node
-    _chatBot->SetRootNode(rootNode);
-    rootNode->MoveChatbotHere(_chatBot);
+    chatbot.SetRootNode(rootNode);
+    rootNode->MoveChatbotHere(std::move(chatbot));
     
     ////
     //// EOF STUDENT CODE
